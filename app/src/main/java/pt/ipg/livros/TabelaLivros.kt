@@ -5,14 +5,18 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
 
-class TabelaCategorias(db: SQLiteDatabase) {
+class TabelaLivros(db: SQLiteDatabase) {
     private val db: SQLiteDatabase = db
 
     fun cria() {
         db.execSQL(
             "CREATE TABLE" + NOME_TABELA + "(" +
                     BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    CAMPO_NOME + " TEXT NOT NULL" +
+                    CAMPO_TITULO + " TEXT NOT NULL" +
+                    CAMPO_AUTOR + " TEXT NOT NULL" +
+                    CAMPO_ID_CATEGORIA + " INTEGER NOT NULL" +
+                    "FOREIGN KEY (" + CAMPO_ID_CATEGORIA + ")" +
+                    "REFERENCES " + TabelaCategorias.NOME_TABELA +
                     ")")
     }
 
@@ -41,6 +45,8 @@ class TabelaCategorias(db: SQLiteDatabase) {
 
     companion object {
         const val NOME_TABELA = "categorias"
-        const val CAMPO_NOME = "nome"
+        const val CAMPO_TITULO = "titulo"
+        const val CAMPO_AUTOR = "autor"
+        const val CAMPO_ID_CATEGORIA = "id_categoria"
     }
 }
