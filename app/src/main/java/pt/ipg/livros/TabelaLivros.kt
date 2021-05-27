@@ -9,22 +9,14 @@ class TabelaLivros(db: SQLiteDatabase) {
     private val db: SQLiteDatabase = db
 
     fun cria() {
-        db.execSQL(
-            "CREATE TABLE " + NOME_TABELA + "(" +
-                    BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    CAMPO_TITULO + " TEXT NOT NULL," +
-                    CAMPO_AUTOR + " TEXT NOT NULL," +
-                    CAMPO_ID_CATEGORIA + " INTEGER NOT NULL," +
-                    " FOREIGN KEY (" + CAMPO_ID_CATEGORIA + ")" +
-                    " REFERENCES " + TabelaCategorias.NOME_TABELA +
-                    ")")
+        db.execSQL("CREATE TABLE $NOME_TABELA (${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, $CAMPO_TITULO TEXT NOT NULL, $CAMPO_AUTOR TEXT NOT NULL, $CAMPO_ID_CATEGORIA INTEGER NOT NULL, FOREIGN KEY($CAMPO_ID_CATEGORIA) REFERENCES ${TabelaCategorias.NOME_TABELA})")
     }
 
     fun insert(values: ContentValues): Long {
         return db.insert(NOME_TABELA, null, values)
     }
 
-    fun update(values: ContentValues, id: String, whereClause: String, whereArgs: Array<String>): Int {
+    fun update(values: ContentValues, whereClause: String, whereArgs: Array<String>): Int {
         return db.update(NOME_TABELA, values, whereClause, whereArgs)
     }
 
@@ -40,7 +32,7 @@ class TabelaLivros(db: SQLiteDatabase) {
         having: String,
         orderBy: String
     ): Cursor? {
-        return db.query(NOME_TABELA, columns, selection, selectionArgs, groupBy, having, orderBy)
+        return db.query(TabelaCategorias.NOME_TABELA, columns, selection, selectionArgs, groupBy, having, orderBy)
     }
 
     companion object {
