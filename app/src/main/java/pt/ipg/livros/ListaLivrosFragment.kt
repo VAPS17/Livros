@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ListaLivrosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     private var _binding: FragmentListaLivrosBinding? = null
+    private var adapterLivros : AdapterLivros? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -40,7 +41,8 @@ class ListaLivrosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerViewLivros = view.findViewById<RecyclerView>(R.id.RecycleViewLivros)
-        recyclerViewLivros.adapter = AdapterLivros()
+        adapterLivros = AdapterLivros()
+        recyclerViewLivros.adapter = adapterLivros
         recyclerViewLivros.layoutManager = LinearLayoutManager(requireContext())
 
         val loaderManager = LoaderManager.getInstance(this)
@@ -63,11 +65,11 @@ class ListaLivrosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
-        TODO("Not yet implemented")
+        adapterLivros!!.cursor = data
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
-        TODO("Not yet implemented")
+        adapterLivros!!.cursor = null
     }
 
     companion object {
