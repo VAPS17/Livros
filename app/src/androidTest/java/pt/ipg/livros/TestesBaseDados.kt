@@ -27,6 +27,13 @@ class TestesBaseDados {
         return id
     }
 
+    private fun insereLivro(tabela: TabelaLivros, livro: Livro): Long {
+        val id = tabela.insert(livro.toContentValues())
+        assertNotEquals(-1, id)
+
+        return id
+    }
+
     private fun getCategoriaBaseDados(tabela: TabelaCategorias, id: Long): Categoria {
         val cursor = tabela.query(
             TabelaCategorias.TODAS_COLUNAS,
@@ -39,6 +46,20 @@ class TestesBaseDados {
         assert(cursor!!.moveToNext())
 
         return Categoria.fromCursor(cursor)
+    }
+
+    private fun getLivroBaseDados(tabela: TabelaLivros, id: Long): Livro {
+        val cursor = tabela.query(
+            TabelaLivros.TODAS_COLUNAS,
+            "${BaseColumns._ID}=?",
+            arrayOf(id.toString()),
+            null, null, null
+        )
+
+        assertNotNull(cursor)
+        assert(cursor!!.moveToNext())
+
+        return Livro.fromCursor(cursor)
     }
 
     @Before
@@ -116,6 +137,95 @@ class TestesBaseDados {
         categoria.id = insereCategoria(tabelaCategorias, categoria)
 
         assertEquals(categoria, getCategoriaBaseDados(tabelaCategorias, categoria.id))
+
+        db.close()
+    }
+
+    @Test
+    fun consegueInserirLivros() {
+        val db = getBdLivrosOpenHelper().writableDatabase
+
+        val tabelaCategorias = TabelaCategorias(db)
+        val categoria = Categoria(nome = "Aventura")
+        categoria.id = insereCategoria(tabelaCategorias, categoria)
+
+        val tabelaLivros = TabelaLivros(db)
+        val livro = Livro(titulo = "O Leão que Temos Cá Dentro", autor = "Rachel Bright", idCategoria = categoria.id)
+        livro.id = insereLivro(tabelaLivros, livro)
+
+        assertEquals(livro, getLivroBaseDados(tabelaLivros, livro.id))
+
+        db.close()
+    }
+
+    @Test
+    fun consegueAlterarLivros() {
+        val db = getBdLivrosOpenHelper().writableDatabase
+
+        val tabelaCategorias = TabelaCategorias(db)
+
+        val categoriaSuspense = Categoria(nome = "Suspense")
+        categoriaSuspense.id = insereCategoria(tabelaCategorias, categoriaSuspense)
+
+        val categoriaMisterio = Categoria(nome = "Mistério")
+        categoriaMisterio.id = insereCategoria(tabelaCategorias, categoriaMisterio)
+
+        val tabelaLivros = TabelaLivros(db)
+        val livro = Livro(titulo = "?", autor = "?", idCategoria = categoriaSuspense.id)
+        livro.id = insereLivro(tabelaLivros, livro)
+
+        livro.titulo = "Ninfeias negras"
+        livro.autor = "Michel Bussi"
+        livro.idCategoria = categoriaMisterio.id
+
+        val registosAlterados = tabelaLivros.update(
+            livro.toContentValues(),
+            "${BaseColumns._ID}=?",
+            arrayOf(livro.id.toString())
+        )
+
+        assertEquals(1, registosAlterados)
+
+        assertEquals(livro, getLivroBaseDados(tabelaLivros, livro.id))
+
+        db.close()
+    }
+
+    @Test
+    fun consegueEliminarLivros() {
+        val db = getBdLivrosOpenHelper().writableDatabase
+
+        val tabelaCategorias = TabelaCategorias(db)
+        val categoria = Categoria(nome = "Auto ajuda")
+        categoria.id = insereCategoria(tabelaCategorias, categoria)
+
+        val tabelaLivros = TabelaLivros(db)
+        val livro = Livro(titulo = "?", autor = "?", idCategoria = categoria.id)
+        livro.id = insereLivro(tabelaLivros, livro)
+
+        val registosEliminados = tabelaLivros.delete(
+            "${BaseColumns._ID}=?",
+            arrayOf(livro.id.toString())
+        )
+
+        assertEquals(1, registosEliminados)
+
+        db.close()
+    }
+
+    @Test
+    fun consegueLerLivros() {
+        val db = getBdLivrosOpenHelper().writableDatabase
+
+        val tabelaCategorias = TabelaCategorias(db)
+        val categoria = Categoria(nome = "Culinária")
+        categoria.id = insereCategoria(tabelaCategorias, categoria)
+
+        val tabelaLivros = TabelaLivros(db)
+        val livro = Livro(titulo = "Chef profissional", autor = "Instituto Americano de Culinária", idCategoria = categoria.id)
+        livro.id = insereLivro(tabelaLivros, livro)
+
+        assertEquals(livro, getLivroBaseDados(tabelaLivros, livro.id))
 
         db.close()
     }
