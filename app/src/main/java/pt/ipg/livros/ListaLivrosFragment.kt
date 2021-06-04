@@ -12,6 +12,8 @@ import pt.ipg.livros.databinding.FragmentListaLivrosBinding
 import android.database.Cursor
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -37,8 +39,11 @@ class ListaLivrosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val loaderManager = LoaderManager.getInstance(this)
+        val recyclerViewLivros = view.findViewById<RecyclerView>(R.id.RecycleViewLivros)
+        recyclerViewLivros.adapter = AdapterLivros()
+        recyclerViewLivros.layoutManager = LinearLayoutManager(requireContext())
 
+        val loaderManager = LoaderManager.getInstance(this)
         loaderManager.initLoader(ID_LOADER_MANAGER_LIVROS, null,this)
     }
 
