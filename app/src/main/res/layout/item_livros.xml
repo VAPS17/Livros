@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margem_campo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#1E3CA8"
+        tools:text="O Leão que há em mim" />
+
+    <TextView
+        android:id="@+id/textViewAutor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margem_campo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        tools:text="Victor Seguro" />
+</LinearLayout>
